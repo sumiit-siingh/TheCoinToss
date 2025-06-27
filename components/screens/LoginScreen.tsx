@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Button, Card } from '../ui';
+import { url } from 'inspector';
 
 interface LoginScreenProps {
   onLoginSuccess?: () => void;
@@ -55,11 +58,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           elevation: 5,
         }}
       >
-        <Image
-          source={require('../../assets/images/Favicon.png')} // Ensure the path is correct
-          className="w-16 h-16 rounded-full mb-4"
-          onError={() => console.log('Error loading Favicon.png')} // Fallback error handling
-        />
+     <Image
+  source={{ uri: 'https://res.cloudinary.com/dk5ge5xx8/image/upload/v1751023601/Favicon_tugon0.png' }} // ✅ correct
+  className="w-16 h-16 rounded-full mb-4"
+  onError={() => console.log('Error loading Favicon.png')}
+/>
+
         <Text className="text-2xl font-bold text-white text-center mb-1">
           Welcome to TheCoinToss
         </Text>
