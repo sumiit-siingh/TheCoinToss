@@ -85,7 +85,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
         <View className="py-4">
           <Button
             title="Logout"
-            onPress={onLogout}
+            onPress={onLogout ?? (() => {})}
             variant="outline"
             size="large"
             className="bg-red-50 border-red-300"

@@ -28,7 +28,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   return (
     <View className="flex-1 bg-white">
       {showHeader && (
-        <Header title={headerTitle} />
+        <Header />
       )}
       
       <MainScreen title={mainScreenTitle}>

@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { FontAwesome, Feather } from '@expo/vector-icons';
-
-// Important: For Tailwind CSS to work, you need to set up a library like NativeWind.
-// Ensure your 'tailwind.config.js' is configured and your 'babel.config.js' includes NativeWind.
-// The classes below will be processed by NativeWind.
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { Button, Card } from '../ui';
 
 interface LoginScreenProps {
   onLoginSuccess?: () => void;
