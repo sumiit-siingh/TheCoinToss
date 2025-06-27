@@ -31,7 +31,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
 
   return (
     <View className="flex-1 bg-gray-50">
-      {/* Header */}
+      Header
       <View className="bg-white py-4 px-6 border-b border-gray-200">
         <View className="flex-row justify-between items-center">
           <TouchableOpacity onPress={onBackToLanding}>
