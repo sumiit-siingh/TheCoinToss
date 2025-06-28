@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image, StyleSheet } from 'react-native';
-import { Feather, FontAwesome } from '@expo/vector-icons'; // Importing Feather and FontAwesome icons
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ActivityIndicator } from 'react-native';
+import { Button, Card } from '../ui';
+import { Feather, FontAwesome } from '@expo/vector-icons';
+import { Image } from 'react-native'
 
 interface LoginScreenProps {
   onLoginSuccess?: () => void;
@@ -36,15 +38,37 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <Image
-          source={require('../../assets/images/Favicon.png')} // Ensure the path is correct
-          style={styles.image}
-          onError={() => console.log('Error loading Favicon.png')} // Fallback error handling
-        />
-        <Text style={styles.welcomeText}>Welcome to TheCoinToss</Text>
-        <Text style={styles.subtitle}>Sign in to test your luck</Text>
+    <View className="flex-1 bg-gray-800 justify-center items-center p-4">
+      <View
+        className="
+          items-center mx-2 my-2
+          rounded-xl bg-[#2D3748] p-5
+          w-full h-[97%] max-w-md
+        "
+        style={{
+          width: '100%',
+          maxWidth: 400,
+          backgroundColor: '#1e293b',
+          borderRadius: 16,
+          padding: 24,
+          shadowColor: '#000',
+          shadowOpacity: 0.2,
+          shadowRadius: 8,
+          elevation: 5,
+        }}
+      >
+      <Image
+        source={{ uri: 'https://res.cloudinary.com/dk5ge5xx8/image/upload/v1751023601/Favicon_tugon0.png' }} // ✅ correct
+        style={styles.image2}
+        onError={() => console.log('Error loading Favicon.png')}
+      />
+
+        <Text className="text-2xl font-bold text-white text-center mb-1">
+          Welcome to TheCoinToss
+        </Text>
+        <Text className="text-sm text-gray-400 text-center mb-6">
+          Sign in to test your luck
+        </Text>
 
         <View style={styles.inputContainer}>
           <Feather name="mail" size={20} color="#94a3b8" style={styles.icon} />
@@ -136,6 +160,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#2a2d3e', // Dark background color
     padding: 16,
   },
+   image: {
+    width: 64, // equivalent to w-16 in Tailwind
+    height: 64, // equivalent to h-16 in Tailwind
+    borderRadius: 32, // equivalent to rounded-full in Tailwind (half of the width/height for a circle)
+    marginBottom: 16, // equivalent to mb-4 in Tailwind
+  },
   card: {
     backgroundColor: '#1e293b', // Dark card background
     borderRadius: 16,
@@ -148,7 +178,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignItems: 'center',
   },
-  image: {
+  image2: {
     width: 64,
     height: 64,
     borderRadius: 32,

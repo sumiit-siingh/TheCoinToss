@@ -2,10 +2,10 @@ import React from 'react';
 import { View } from 'react-native';
 import { Header } from './Header';
 import { Footer } from './Footer';
-import { MainScreen } from '../screens';
 
 interface AppLayoutProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
+  isAuthenticated?: boolean;
   headerTitle?: string;
   mainScreenTitle?: string;
   showFooter?: boolean;
@@ -14,6 +14,7 @@ interface AppLayoutProps {
   onSettingsPress?: () => void;
   onProfilePress?: () => void;
 }
+
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
   children,
@@ -30,10 +31,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       {showHeader && (
         <Header />
       )}
-      
-      <MainScreen title={mainScreenTitle}>
-        {children}
-      </MainScreen>
+
+      {children}
       
       {showFooter && (
         <Footer
@@ -44,4 +43,4 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       )}
     </View>
   );
-}; 
+};

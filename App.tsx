@@ -3,11 +3,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StatusBar } from 'expo-status-bar';
 import { Text, View } from 'react-native';
-import { AppLayout, Button, Card, AuthScreen, DashboardScreen } from './components';
+import { AppLayout, Button, Card } from './components'; // Ensure these imports are correct
+import {AuthScreen} from './components/screens/AuthScreen';  // Make sure this path is correct
+import { DashboardScreen } from './components/screens/DashboardScreen'; // Ensure the path is correct
 import './global.css';
 
 const Drawer = createDrawerNavigator();
 
+// HomeScreen for the main landing page
 function HomeScreen({ navigation }: any) {
   return (
     <AppLayout
@@ -25,7 +28,7 @@ function HomeScreen({ navigation }: any) {
           </Text>
           <Button 
             title="Get Started" 
-            onPress={() => navigation.navigate('Login/Signup')}
+            onPress={() => navigation.navigate('Login/Signup')} // Navigate to login/signup screen
             className="mt-2"
           />
         </Card>
@@ -54,18 +57,20 @@ function HomeScreen({ navigation }: any) {
   );
 }
 
+// Wrapper for AuthScreen
 function AuthScreenWrapper({ navigation }: any) {
   return (
     <AuthScreen
-      onAuthSuccess={() => navigation.navigate('Dashboard')}
-      onBackToLanding={() => navigation.navigate('Home')}
+      onAuthSuccess={() => navigation.navigate('Dashboard')} // Navigate to Dashboard after successful auth
+      onBackToLanding={() => navigation.navigate('Home')} // Navigate back to Home screen if needed
     />
   );
 }
 
+// Wrapper for DashboardScreen
 function DashboardScreenWrapper({ navigation }: any) {
   return (
-    <DashboardScreen onLogout={() => navigation.navigate('Home')} />
+    <DashboardScreen onLogout={() => navigation.navigate('Home')} />  // Logout and go back to Home
   );
 }
 
