@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import { FontAwesome, Feather } from '@expo/vector-icons';
-
-// Important: For Tailwind CSS to work, you need to set up a library like NativeWind.
-// Ensure your 'tailwind.config.js' is configured and your 'babel.config.js' includes NativeWind.
-// The classes below will be processed by NativeWind.
 
 interface LoginScreenProps {
   onLoginSuccess?: () => void;
@@ -23,9 +27,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
   const handleLogin = (): void => {
     if (!email || !password) {
-      console.log('Please enter both email and password.'); // In RN, you might use Alert.alert here
+      Alert.alert('Missing Fields', 'Please enter both email and password.');
       return;
     }
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -36,7 +41,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
   const handleSocialLogin = (provider: string): void => {
     console.log(`Signing in with ${provider}`);
-    // Implement actual social login logic here
+    // Placeholder for social login logic
   };
 
   return (
@@ -60,10 +65,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         }}
       >
         <Image
-          source={require('../../assets/images/Favicon.png')} // Ensure the path is correct
+          source={{
+            uri: 'https://res.cloudinary.com/dk5ge5xx8/image/upload/v1751023601/Favicon_tugon0.png',
+          }}
           className="w-16 h-16 rounded-full mb-4"
-          onError={() => console.log('Error loading Favicon.png')} // Fallback error handling
+          onError={() => console.log('Error loading image')}
         />
+
         <Text className="text-2xl font-bold text-white text-center mb-1">
           Welcome to TheCoinToss
         </Text>
@@ -73,11 +81,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
         <View className="w-full mb-3">
           <View className="flex-row items-center bg-[#3C4459] rounded-lg px-3 py-1 border border-gray-600">
-            <Feather name="mail" size={20} color="#94a3b8" className="mr-2" />
+            <Feather name="mail" size={20} color="#94a3b8" />
             <TextInput
               placeholder="Email Address"
               placeholderTextColor="#94a3b8"
-              className="flex-1 text-white py-3"
+              className="flex-1 text-white py-3 ml-2"
               keyboardType="email-address"
               autoCapitalize="none"
               value={email}
@@ -88,11 +96,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
         <View className="w-full mb-3">
           <View className="flex-row items-center bg-[#3C4459] rounded-lg px-3 py-1 border border-gray-600">
-            <Feather name="lock" size={20} color="#94a3b8" className="mr-2" />
+            <Feather name="lock" size={20} color="#94a3b8" />
             <TextInput
               placeholder="Password"
               placeholderTextColor="#94a3b8"
-              className="flex-1 text-white py-3"
+              className="flex-1 text-white py-3 ml-2"
               secureTextEntry
               value={password}
               onChangeText={setPassword}
@@ -101,8 +109,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         </View>
 
         <TouchableOpacity
-          className={`bg-orange-500 w-full py-3 rounded-lg items-center mt-3 ${isLoading ? 'opacity-75' : ''
-            }`}
+          className={`bg-orange-500 w-full py-3 rounded-lg items-center mt-3 ${
+            isLoading ? 'opacity-75' : ''
+          }`}
           onPress={handleLogin}
           disabled={isLoading}
         >
@@ -115,7 +124,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
         <View className="flex-row items-center my-4 w-full">
           <View className="flex-1 h-[1px] bg-gray-500" />
-          <Text className="text-gray-500 mx-3 font-medium">Or continue with</Text>
+          <Text className="text-gray-500 mx-3 font-medium">
+            Or continue with
+          </Text>
           <View className="flex-1 h-[1px] bg-gray-500" />
         </View>
 
@@ -124,7 +135,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           onPress={() => handleSocialLogin('Google')}
         >
           <Text className="text-gray-300 font-semibold">
-            <FontAwesome name="google" size={18} color="#D1D5DB" />   Sign in with Google
+            <FontAwesome name="google" size={18} color="#D1D5DB" /> Sign in with Google
           </Text>
         </TouchableOpacity>
 
@@ -133,7 +144,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           onPress={() => handleSocialLogin('Twitter')}
         >
           <Text className="text-gray-300 font-semibold">
-            <FontAwesome name="twitter" size={18} color="#D1D5DB" />   Sign in with Twitter
+            <FontAwesome name="twitter" size={18} color="#D1D5DB" /> Sign in with Twitter
           </Text>
         </TouchableOpacity>
 
@@ -142,7 +153,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           onPress={() => handleSocialLogin('Facebook')}
         >
           <Text className="text-gray-300 font-semibold">
-            <FontAwesome name="facebook" size={18} color="#D1D5DB" />   Sign in with Facebook
+            <FontAwesome name="facebook" size={18} color="#D1D5DB" /> Sign in with Facebook
           </Text>
         </TouchableOpacity>
 
