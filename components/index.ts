@@ -10,6 +10,9 @@ export { AuthScreen } from './screens/AuthScreen';
 export { LoginScreen } from './screens/LoginScreen';
 export { SignupScreen } from './screens/SignupScreen';
 export { DashboardScreen } from './screens/DashboardScreen';
+// --- ADD THESE TWO MISSING LINES ---
+export { LeaderboardScreen } from './screens/LeaderboardScreen';
+export { TheCoinTossRoomScreen } from './screens/TheCoinTossRoomScreen';
 
 // UI Components
 export { Button } from './ui/Button';
@@ -18,4 +21,4 @@ export { Card } from './ui/Card';
 // Legacy Components (keeping for backward compatibility)
 export { ScreenContent } from './ScreenContent';
 export { EditScreenInfo } from './EditScreenInfo';
-export { Container } from './Container'; 
+export { Container } from './Container';
