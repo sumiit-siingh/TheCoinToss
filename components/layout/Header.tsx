@@ -45,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated = false }) => {
   return (
     <View
       style={{ height: authMenuVisible ? 200 : baseHeight }}
-      className="w-full bg-gray-500 px-8 pt-1 pb-4 z-10"
+      className="w-full bg-gray-500  px-8 pt-1 pb-4 z-10"
     >
       {/* Header Row */}
       <View className="flex-row justify-between items-center">
