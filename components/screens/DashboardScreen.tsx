@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { AppLayout } from '../layout';
+import { AppLayout } from '../layout/AppLayout'; // Using the direct import path
 import { Button, Card } from '../ui';
 
 interface DashboardScreenProps {
@@ -15,6 +15,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       headerTitle="Dashboard"
       mainScreenTitle="Welcome to TheCoinToss"
       showFooter={true}
+      isAuthenticated={true} // This tells the Header to act as a logged-in menu
     >
       <ScrollView className="space-y-4" showsVerticalScrollIndicator={false}>
         <Card title="Account Overview" subtitle="Your coin toss statistics">
@@ -94,4 +95,4 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       </ScrollView>
     </AppLayout>
   );
-}; 
+};
