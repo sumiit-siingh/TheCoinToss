@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { Button, Card } from '../ui';
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image, StyleSheet } from 'react-native';
+import { Feather, FontAwesome } from '@expo/vector-icons'; // Importing Feather and FontAwesome icons
 
 interface LoginScreenProps {
   onLoginSuccess?: () => void;
@@ -19,7 +19,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
   const handleLogin = (): void => {
     if (!email || !password) {
-      console.log('Please enter both email and password.'); // In RN, you might use Alert.alert here
+      Alert.alert('Please enter both email and password.'); // Using Alert for better UX
       return;
     }
     setIsLoading(true);
@@ -36,119 +36,207 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   };
 
   return (
-    <View className="flex-1 bg-gray-800 justify-center items-center p-4">
-      <View
-        className="
-          items-center mx-2 my-2
-          rounded-xl bg-[#2D3748] p-5
-          w-full h-[97%] max-w-md
-        "
-        style={{
-          width: '100%',
-          maxWidth: 400,
-          backgroundColor: '#1e293b',
-          borderRadius: 16,
-          padding: 24,
-          shadowColor: '#000',
-          shadowOpacity: 0.2,
-          shadowRadius: 8,
-          elevation: 5,
-        }}
-      >
+    <View style={styles.container}>
+      <View style={styles.card}>
         <Image
           source={require('../../assets/images/Favicon.png')} // Ensure the path is correct
-          className="w-16 h-16 rounded-full mb-4"
+          style={styles.image}
           onError={() => console.log('Error loading Favicon.png')} // Fallback error handling
         />
-        <Text className="text-2xl font-bold text-white text-center mb-1">
-          Welcome to TheCoinToss
-        </Text>
-        <Text className="text-sm text-gray-400 text-center mb-6">
-          Sign in to test your luck
-        </Text>
+        <Text style={styles.welcomeText}>Welcome to TheCoinToss</Text>
+        <Text style={styles.subtitle}>Sign in to test your luck</Text>
 
-        <View className="w-full mb-3">
-          <View className="flex-row items-center bg-[#3C4459] rounded-lg px-3 py-1 border border-gray-600">
-            <Feather name="mail" size={20} color="#94a3b8" className="mr-2" />
-            <TextInput
-              placeholder="Email Address"
-              placeholderTextColor="#94a3b8"
-              className="flex-1 text-white py-3"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={setEmail}
-            />
-          </View>
+        <View style={styles.inputContainer}>
+          <Feather name="mail" size={20} color="#94a3b8" style={styles.icon} />
+          <TextInput
+            placeholder="Email Address"
+            placeholderTextColor="#94a3b8"
+            style={styles.input}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
+          />
         </View>
 
-        <View className="w-full mb-3">
-          <View className="flex-row items-center bg-[#3C4459] rounded-lg px-3 py-1 border border-gray-600">
-            <Feather name="lock" size={20} color="#94a3b8" className="mr-2" />
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor="#94a3b8"
-              className="flex-1 text-white py-3"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-          </View>
+        <View style={styles.inputContainer}>
+          <Feather name="lock" size={20} color="#94a3b8" style={styles.icon} />
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="#94a3b8"
+            style={styles.input}
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
         </View>
 
         <TouchableOpacity
-          className={`bg-orange-500 w-full py-3 rounded-lg items-center mt-3 ${isLoading ? 'opacity-75' : ''
-            }`}
+          style={[styles.button, isLoading && styles.buttonDisabled]}
           onPress={handleLogin}
           disabled={isLoading}
         >
           {isLoading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text className="text-white font-semibold">Login Securely</Text>
+            <Text style={styles.buttonText}>Login Securely</Text>
           )}
         </TouchableOpacity>
 
-        <View className="flex-row items-center my-4 w-full">
-          <View className="flex-1 h-[1px] bg-gray-500" />
-          <Text className="text-gray-500 mx-3 font-medium">Or continue with</Text>
-          <View className="flex-1 h-[1px] bg-gray-500" />
+        <View style={styles.separator}>
+          <View style={styles.line}></View>
+          <Text style={styles.orText}>Or continue with</Text>
+          <View style={styles.line}></View>
         </View>
 
         <TouchableOpacity
-          className="bg-[#3C4459] w-full py-3 rounded-lg items-center mb-2"
+          style={styles.socialButton}
           onPress={() => handleSocialLogin('Google')}
         >
-          <Text className="text-gray-300 font-semibold">
-            <FontAwesome name="google" size={18} color="#D1D5DB" />   Sign in with Google
+          <Text style={styles.socialButtonText}>
+            <FontAwesome name="google" size={18} color="#D1D5DB" /> Sign in with Google
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="bg-[#3C4459] w-full py-3 rounded-lg items-center mb-2"
+          style={styles.socialButton}
           onPress={() => handleSocialLogin('Twitter')}
         >
-          <Text className="text-gray-300 font-semibold">
-            <FontAwesome name="twitter" size={18} color="#D1D5DB" />   Sign in with Twitter
+          <Text style={styles.socialButtonText}>
+            <FontAwesome name="twitter" size={18} color="#D1D5DB" /> Sign in with Twitter
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="bg-[#3C4459] w-full py-3 rounded-lg items-center mb-2"
+          style={styles.socialButton}
           onPress={() => handleSocialLogin('Facebook')}
         >
-          <Text className="text-gray-300 font-semibold">
-            <FontAwesome name="facebook" size={18} color="#D1D5DB" />   Sign in with Facebook
+          <Text style={styles.socialButtonText}>
+            <FontAwesome name="facebook" size={18} color="#D1D5DB" /> Sign in with Facebook
           </Text>
         </TouchableOpacity>
 
-        <View className="flex-row mt-6">
-          <Text className="text-gray-400">Don't have an account? </Text>
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Don't have an account? </Text>
           <TouchableOpacity onPress={onSignupPress}>
-            <Text className="text-orange-500 font-semibold">Sign Up</Text>
+            <Text style={styles.footerLink}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 };
+
+// --- Styles ---
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2a2d3e', // Dark background color
+    padding: 16,
+  },
+  card: {
+    backgroundColor: '#1e293b', // Dark card background
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  image: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    marginBottom: 16,
+  },
+  welcomeText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#94a3b8',
+    marginBottom: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#3C4459',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginBottom: 16,
+    width: '100%',
+  },
+  icon: {
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    color: '#fff',
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#f59e0b',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonDisabled: {
+    opacity: 0.7,
+  },
+  buttonText: {
+    color: '#1f2937',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  separator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  line: {
+    height: 1,
+    backgroundColor: '#D1D5DB',
+    flex: 1,
+  },
+  orText: {
+    color: '#D1D5DB',
+    marginHorizontal: 10,
+  },
+  socialButton: {
+    backgroundColor: '#3C4459',
+    paddingVertical: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    width: '100%',
+    alignItems: 'center',
+  },
+  socialButtonText: {
+    color: '#D1D5DB',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  footer: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  footerText: {
+    color: '#94a3b8',
+  },
+  footerLink: {
+    color: '#f59e0b',
+    fontWeight: 'bold',
+  },
+});
+
+export default LoginScreen;
