@@ -7,3 +7,4 @@ export { SignupScreen } from './SignupScreen';
 export { DashboardScreen } from './DashboardScreen'; 
 export { LeaderboardScreen } from './LeaderboardScreen';
 export { TheCoinTossRoomScreen } from './TheCoinTossRoomScreen';
+export { ProfileScreen } from './ProfileScreen';
