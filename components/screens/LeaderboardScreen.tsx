@@ -45,7 +45,6 @@ const TopPlayerCard = ({ user }: { user: Player }) => (
       <Image source={{ uri: user.avatar }} className="w-20 h-20 rounded-full mb-3 border-2 border-white" />
       <Text className="text-white font-bold text-xl">{user.name}</Text>
       <View className="flex-row items-center mt-2">
-        {/* <CoinIcon width={20} height={20} fill="#FDE047" /> */}
         <MaterialCommunityIcons name="circle-double" color="#fabe32" size={20} />
         <Text className="text-yellow-300 font-semibold text-lg ml-2">
           {user.score.toLocaleString()}

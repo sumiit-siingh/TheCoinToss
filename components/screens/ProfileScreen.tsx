@@ -3,7 +3,8 @@ import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Header } from '../layout/Header';
 import { FontAwesome } from '@expo/vector-icons';
 // We can import the stat icons from our central Icons file
-import { TrendingUpIcon, CrosshairIcon, UsersIcon, StarIcon } from '../ui/Icons';
+// Update the import below to match the actual exports from '../ui/Icons'
+import { UsersIcon, StarIcon } from '../ui/Icons';
 
 // --- Reusable component for each of the 4 stat boxes ---
 type StatCardProps = {
@@ -56,11 +57,11 @@ export const ProfileScreen = () => {
           <View className="flex-row flex-wrap justify-between">
             <StatCard 
               label="Win Ratio" 
-              icon={<TrendingUpIcon width={28} height={28} stroke="#22c55e" />} 
+              icon={<StarIcon width={28} height={28} fill="#22c55e" />} 
             />
             <StatCard 
               label="Total Tosses" 
-              icon={<CrosshairIcon width={28} height={28} stroke="#3b82f6" />} 
+              icon={<UsersIcon width={28} height={28} stroke="#3b82f6" />} 
             />
             <StatCard 
               label="Rooms Joined" 

@@ -8,3 +8,5 @@ export { DashboardScreen } from './DashboardScreen';
 export { LeaderboardScreen } from './LeaderboardScreen';
 export { TheCoinTossRoomScreen } from './TheCoinTossRoomScreen';
 export { ProfileScreen } from './ProfileScreen';
+export { CreateNewRoomScreen } from './CreateNewRoomScreen';
+export { JoinRoomScreen } from './JoinRoomScreen';

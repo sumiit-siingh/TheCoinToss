@@ -11,14 +11,10 @@ import './global.css';
 
 // Import all screens
 import {
-  LoginScreen,
-  SignupScreen,
-  DashboardScreen,
-  LoadingScreen,
-  LeaderboardScreen,
-  TheCoinTossRoomScreen,
-  ProfileScreen,
+  LoginScreen, SignupScreen, DashboardScreen, LoadingScreen, LeaderboardScreen,
+  TheCoinTossRoomScreen, ProfileScreen, CreateNewRoomScreen, JoinRoomScreen,
 } from './components';
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -75,7 +71,7 @@ function AppDrawerNavigator({ handleLogout }: { handleLogout: () => void }) {
     >
       <Drawer.Screen
         name="Dashboard"
-        children={(props) => <DashboardScreen {...props} onLogout={handleLogout} />}
+        component={DashboardScreen}
       />
       <Drawer.Screen name="LeaderBoard" component={LeaderboardScreen} />
       <Drawer.Screen name="TheCoinTossRoom" component={TheCoinTossRoomScreen} />
@@ -84,6 +80,9 @@ function AppDrawerNavigator({ handleLogout }: { handleLogout: () => void }) {
         component={ProfileScreen}
         options={{ drawerItemStyle: { height: 0, margin: 0 } }}
       />
+      <Drawer.Screen name="CreateNewRoom" component={CreateNewRoomScreen} options={{ drawerItemStyle: { height: 0, margin: 0 } }} />
+      <Drawer.Screen name="JoinRoom" component={JoinRoomScreen} options={{ drawerItemStyle: { height: 0, margin: 0 } }} />
+    
     </Drawer.Navigator>
   );
 }

@@ -14,6 +14,8 @@ export { LeaderboardScreen } from './screens/LeaderboardScreen';
 export { TheCoinTossRoomScreen } from './screens/TheCoinTossRoomScreen';
 // --- ADD THIS LINE TO FIX THE ERROR ---
 export { ProfileScreen } from './screens/ProfileScreen';
+export { CreateNewRoomScreen } from './screens/CreateNewRoomScreen';
+export { JoinRoomScreen } from './screens/JoinRoomScreen';
 
 
 // UI Components

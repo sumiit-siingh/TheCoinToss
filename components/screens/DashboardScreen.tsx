@@ -1,158 +1,231 @@
-import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Svg, { Path, SvgProps } from 'react-native-svg';
-import { Header } from '../layout/Header'; // 1. Import the Header component directly
 
-// --- All your Icon and Card components remain here ---
-interface IconProps extends SvgProps { width?: number; height?: number; }
-const StarIcon: React.FC<IconProps> = (props) => ( <Svg {...props} viewBox="0 0 24 24" fill="currentColor"><Path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></Svg>);
-const CheckIcon: React.FC<IconProps> = (props) => ( <Svg {...props} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><Path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></Svg>);
-const WalletIcon: React.FC<IconProps> = (props) => ( <Svg {...props} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><Path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m12 0V9" /></Svg>);
-const LightningIcon: React.FC<IconProps> = (props) => ( <Svg {...props} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><Path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></Svg>);
-const CoinIcon: React.FC<IconProps> = (props) => ( <Svg {...props} viewBox="0 0 20 20" fill="currentColor"><Path d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm0-2a4 4 0 100-8 4 4 0 000 8z" /></Svg>);
-const PlusCircleIcon: React.FC<IconProps> = (props) => (<Svg {...props} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><Path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></Svg>);
-const TrophyIcon: React.FC<IconProps> = (props) => ( <Svg {...props} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><Path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9a9 9 0 119 0zM16.5 18.75a9 9 0 00-9 0m9 0h.008v.008h-.008v-.008zm-9 0h-.008v.008h.008v-.008zM9 7.5a.75.75 0 01.75.75v3.75c0 .414.336.75.75.75h3a.75.75 0 010 1.5h-3.75a.75.75 0 01-.75-.75V8.25a.75.75 0 01.75-.75zM12 21a8.25 8.25 0 005.25-2.016" /></Svg>);
-const UsersIcon: React.FC<IconProps> = (props) => ( <Svg {...props} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><Path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372m-10.5-.372a9.369 9.369 0 01-3.125-1.125m15.507-11.378a9.369 9.369 0 01-3.125 1.125m10.5 3.72a9.38 9.38 0 01-2.625-.372M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></Svg>);
-const HistoryIcon: React.FC<IconProps> = (props) => ( <Svg {...props} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><Path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0011.664 0l3.181-3.183m-4.991-2.696a8.25 8.25 0 00-11.664 0l-3.181 3.183" /></Svg>);
-const ClockIcon: React.FC<IconProps> = (props) => ( <Svg {...props} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><Path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></Svg>);
-interface GradientButtonProps {
+// Import our shared components
+import { Header } from '../layout/Header';
+import {
+    CheckCircleIcon, StarIcon, WalletIcon, LightningIcon, CalendarIcon, PlusCircleIcon,
+    ArrowRightIcon, TrophyIcon, UsersIcon, GiftIcon, HistoryIcon, ClockIcon, ChartBarIcon, CoinIcon
+} from '../ui/Icons';
+
+// --- Reusable Button Component ---
+// This is used in multiple places, so we keep it as a component
+import { StyleProp, ViewStyle, TextStyle } from 'react-native';
+
+export const GradientButton = ({
+  onPress,
+  title,
+  icon: Icon,
+  style,
+  textStyle,
+}: {
   onPress: () => void;
   title: string;
-  style?: object;
-  textStyle?: object;
-}
-const GradientButton: React.FC<GradientButtonProps> = ({ onPress, title, style, textStyle }) => (
-  <TouchableOpacity onPress={onPress} style={style}>
-    <LinearGradient colors={['#facc15', '#f97316']} style={styles.gradientButton}>
-      <Text style={[styles.buttonText, textStyle]}>{title}</Text>
+  icon?: React.ComponentType<{ size?: number; color?: string; style?: any }>;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+}) => (
+  <TouchableOpacity onPress={onPress} style={style} className="rounded-[12px] overflow-hidden">
+    <LinearGradient colors={['#facc15', '#f97316']} className="flex-row items-center justify-center py-3 px-6" start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
+      {Icon && <Icon size={16} color="#111217" style={{ marginRight: 8 }} />}
+      <Text className="text-slate-900 font-bold text-2xl" style={textStyle}>{title}</Text>
     </LinearGradient>
   </TouchableOpacity>
 );
-const DailyLoginRewardCard = () => (
-  <View style={styles.card}>
-    <View style={styles.cardHeader}>
-      <View>
-        <Text style={styles.cardTitle}>Daily Login Reward</Text>
-        <Text style={styles.cardSubtitle}>Claim your daily bonus.</Text>
-      </View>
-      <View style={[styles.iconContainer, { backgroundColor: 'rgba(34, 197, 94, 0.2)' }]}>
-        <CheckIcon style={styles.icon} stroke="#22c55e" />
-      </View>
-    </View>
-    <View style={styles.starContainer}>
-      {[...Array(5)].map((_, i) => (
-        <StarIcon key={i} style={styles.starIcon} fill="#4b5563" />
-      ))}
-    </View>
-    <GradientButton title="Reach 5-day streak" onPress={() => {}} />
-  </View>
-);
-const CoinWalletCard = () => (<View style={styles.card}><View style={styles.cardHeader}><Text style={styles.cardTitle}>Coin Wallet</Text><View style={[styles.iconContainer, { backgroundColor: 'rgba(250, 204, 21, 0.2)' }]}><WalletIcon style={styles.icon} stroke="#facc15" /></View></View><View style={styles.coinDisplay}><CoinIcon style={styles.largeCoinIcon} fill="#fde047" /><Text style={styles.coinAmount}>1000</Text></View><Text style={styles.cardSubtitle}>Use coins to enter special tournaments.</Text></View>);
-const DailyChallengeCard = () => (<View style={styles.card}><View style={styles.cardHeader}><Text style={styles.cardTitle}>Daily Challenge</Text><View style={[styles.iconContainer, { backgroundColor: 'rgba(168, 85, 247, 0.2)' }]}><LightningIcon style={styles.icon} stroke="#a855f7" /></View></View><Text style={styles.cardSubtitle}>Win 10 rooms in a row to earn a badge!</Text><View style={{flexDirection: 'row', justifyContent: 'space-between', marginVertical: 8}}><Text style={styles.progressText}>Progress</Text><Text style={styles.progressText}>3/10</Text></View><View style={styles.progressBarBackground}><LinearGradient colors={['#facc15', '#f97316']} style={styles.progressBarFill} start={{x: 0, y: 0}} end={{x: 1, y: 0}}/></View><TouchableOpacity style={styles.lockedButton}><Text style={styles.lockedButtonText}>Locked</Text></TouchableOpacity></View>);
-const StatsCard = () => (<View style={styles.card}><View style={styles.cardHeader}><UsersIcon style={styles.headerIcon} stroke="#c084fc" /><Text style={styles.cardTitle}>Your Stats</Text></View><View style={styles.statsGrid}><View style={styles.statItem}><Text style={styles.statValue}>65%</Text><Text style={styles.statLabel}>Win Ratio</Text></View><View style={styles.statItem}><Text style={styles.statValue}>142</Text><Text style={styles.statLabel}>Total Tosses</Text></View><View style={styles.statItem}><Text style={styles.statValue}>35</Text><Text style={styles.statLabel}>Rooms Joined</Text></View><View style={styles.statItem}><Text style={styles.statValue}>12</Text><Text style={styles.statLabel}>Achievements</Text></View></View></View>);
-const RecentActivityCard = () => { const acts = [{t:"Won a 50-person room",i:"2h ago"},{t:"Created a private room 'Friends Only'",i:"1d ago"},{t:"Reached a 5-win streak",i:"2d ago"}]; return (<View style={styles.card}><View style={styles.cardHeader}><HistoryIcon style={styles.headerIcon} stroke="#facc15" /><Text style={styles.cardTitle}>Recent Activity</Text></View><View>{acts.map((act, idx) => (<View key={idx} style={styles.activityItem}><CoinIcon style={styles.activityIcon} fill="#fde047" /><Text style={styles.activityText}>{act.t}</Text><Text style={styles.activityTime}>{act.i}</Text></View>))}</View></View>);};
-const TimeInGameCard = () => (<View style={styles.card}><View style={styles.cardHeader}><Text style={styles.cardTitle}>Total Time</Text><View style={[styles.iconContainer, { backgroundColor: 'rgba(59, 130, 246, 0.2)' }]}><ClockIcon style={styles.icon} stroke="#3b82f6" /></View></View><View style={styles.coinDisplay}><ClockIcon style={styles.largeCoinIcon} stroke="#60a5fa" /><Text style={styles.coinAmount}>1h 40m</Text></View><TouchableOpacity style={styles.lockedButton}><Text style={styles.lockedButtonText}>View History</Text></TouchableOpacity></View>);
+
+// --- ActionCard Component ---
+// This card is used 3 times, so keeping it as a component avoids a lot of repeated code.
+type ActionCardProps = {
+    icon: React.ComponentType<{ size?: number; color?: string; style?: any }>;
+    title: string;
+    subtitle: string;
+    buttonTitle: string;
+    buttonIcon?: React.ComponentType<{ size?: number; color?: string; style?: any }>;
+    onButtonPress: () => void;
+};
+
+const ActionCard: React.FC<ActionCardProps> = ({icon: Icon, title, subtitle, buttonTitle, buttonIcon, onButtonPress}) => {
+    const [isPressed, setIsPressed] = useState(false);
+    return (
+        // --- FIX: Added rounding and overflow-hidden to the parent TouchableOpacity ---
+        <TouchableOpacity
+            activeOpacity={1}
+            onPressIn={() => setIsPressed(true)}
+            onPressOut={() => setIsPressed(false)}
+            // onPress={onButtonPress}
+            className="relative mb-4 rounded-2xl overflow-hidden p-1" // Added rounding and overflow rule
+        >
+            {/* The gradient for the glow effect */}
+            <LinearGradient
+                colors={['#8b5cf6', '#f59e0b']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                className={`absolute -top-0.5 -left-0.5 -right-0.5 -bottom-0.5 rounded-[18px] transition-opacity ${isPressed ? 'opacity-75' : 'opacity-25'}`}
+            />
+            {/* The main content card */}
+            <View className="bg-slate-900 p-6 items-center rounded-[16px] w-full border border-slate-700 mb-0">
+                <Icon size={40} color="#f97316" />
+                <Text className="text-2xl font-bold text-white text-center mt-3">{title}</Text>
+                <Text className="text-sm text-gray-400 text-center my-1 leading-5">{subtitle}</Text>
+                <GradientButton title={buttonTitle} onPress={onButtonPress} icon={buttonIcon} style={{marginTop: 16}}/>
+            </View>
+        </TouchableOpacity>
+    );
+};
+
 
 // --- Main Dashboard Screen Component ---
-interface DashboardScreenProps {
-  onLogout: () => void;
-}
+export const DashboardScreen = ({ navigation }: { navigation: any }) => {
+    // Ad banner can also be a small helper component inside here
+    const AdBanner = ({style = {}}) => (
+        <View className="w-full h-[90px] border border-dashed border-slate-700 rounded-[16px] justify-center items-center mb-5 bg-slate-900" style={style}>
+            <Text className="text-sm text-gray-400">Leaderboard Ad</Text>
+            <Text className="text-xs text-gray-500">100% x 90</Text>
+        </View>
+    );
 
-export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onLogout }) => {
-  const { width } = Dimensions.get('window');
-  const isTablet = width >= 768;
+    // Data for the recent activity card
+    const recentActivity = [{t:"Won a 50-person room",i:"2h ago"},{t:"Created a private room",i:"1d ago"},{t:"Reached a 5-win streak",i:"2d ago"}];
 
-  const mainCards = (
-    <View style={isTablet && { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-      <View style={isTablet && { width: '48%' }}><DailyLoginRewardCard /></View>
-      <View style={isTablet && { width: '48%' }}><CoinWalletCard /></View>
-      <View style={isTablet && { width: '48%' }}><DailyChallengeCard /></View>
-      <View style={isTablet && { width: '100%' }}><TrophyIcon style={styles.headerIcon} /></View>
-    </View>
-  );
+    return (
+        <View style={{flex: 1}}>
+            <Header isAuthenticated={true} />
+            <LinearGradient colors={['#111217', '#1e2029']} style={{flex: 1}}>
+                <SafeAreaView style={{ flex: 1 }}>
+                    <ScrollView contentContainerStyle={{paddingHorizontal: 16, paddingVertical: 24}}>
+                        {/* --- Welcome Header --- */}
+                        <View className="items-center mb-6">
+                            <Text className="text-4xl font-bold text-white text-center leading-tight">
+                                Welcome prem, <Text className="text-orange-500">The Coin Toss</Text>
+                            </Text>
+                            <Text className="text-base text-gray-400 text-center mt-2 px-5">
+                                Ready to test your luck? Create or join a room to get started.
+                            </Text>
+                        </View>
+                        
+                        <AdBanner />
 
-  const sideCards = (
-    <View style={isTablet && { width: '32%' }}>
-      <StatsCard />
-      <RecentActivityCard />
-      <TimeInGameCard />
-    </View>
-  );
+                        {/* --- ALL CARDS ARE NOW WRITTEN DIRECTLY BELOW --- */}
+                        
+                        {/* Daily Login Reward Card */}
+                        <View className="bg-slate-900 p-4 mb-4 rounded-[16px] w-full border border-slate-700">
+                            <View className="flex-row justify-between items-center mb-3">
+                                <View className="flex-1">
+                                    <Text className="text-xl font-bold text-white">Daily Login Reward</Text>
+                                    <Text className="text-sm text-gray-400 mt-1 leading-5">You are on a 3-day streak! Claim your bonus.</Text>
+                                </View>
+                                <CheckCircleIcon />
+                            </View>
+                            <View className="flex-row mb-4 mt-2">
+                                {[...Array(5)].map((_, i) => ( <StarIcon key={i} style={{marginRight: 4}} /> ))}
+                            </View>
+                            <GradientButton title="Reach 5-day streak" onPress={() => {}} />
+                        </View>
 
-  return (
-    // 2. The AppLayout wrapper is removed. The screen is now self-contained.
-    <LinearGradient colors={['#1e2029', '#111217']} style={{flex: 1}}>
-      <SafeAreaView style={{flex: 1}}>
-        {/* 3. The Header is now part of the Dashboard screen itself */}
-        <Header isAuthenticated={true} />
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.dashboard}>
-            <Text style={styles.welcomeTitle}>
-              Welcome <Text style={{color: '#c084fc'}}>Prem Yadav</Text>
-            </Text>
-            <View style={styles.banner}>
-              <Text style={styles.bannerText}>Horizontal Banner</Text>
-              <Text style={styles.bannerSubtext}>100% x 100</Text>
-            </View>
+                        {/* Coin Wallet Card */}
+                        <View className="bg-slate-900 p-4 mb-4 rounded-[16px] w-full border border-slate-700">
+                            <View className="flex-row justify-between items-center mb-3">
+                                <Text className="text-xl font-bold text-white">Coin Wallet</Text>
+                                <WalletIcon />
+                            </View>
+                            <View className="flex-row items-center my-3">
+                                <CoinIcon size={40} />
+                                <Text className="text-4xl font-bold text-white ml-3">500</Text>
+                            </View>
+                            <Text className="text-sm text-gray-400 mt-1 leading-5">Use coins to enter special tournaments.</Text>
+                        </View>
 
-            {isTablet ? (
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View style={{width: '65%'}}>{mainCards}</View>
-                {sideCards}
-              </View>
-            ) : (
-              <>
-                {mainCards}
-                {sideCards}
-              </>
-            )}
-            
-            <TouchableOpacity onPress={onLogout} style={styles.logoutButton}>
-              <Text style={styles.buttonText}>Logout</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </LinearGradient>
-  );
-}
+                        {/* Daily Challenge Card */}
+                        <View className="bg-slate-900 p-4 mb-4 rounded-[16px] w-full border border-slate-700">
+                            <View className="flex-row justify-between items-center mb-3">
+                                <Text className="text-xl font-bold text-white">Daily Challenge</Text>
+                                <LightningIcon />
+                            </View>
+                            <Text className="text-sm text-gray-400 mt-1 leading-5">Win 10 rooms in a row to earn a badge!</Text>
+                            <View className="flex-row justify-between my-2"><Text className="text-xs text-gray-400">Progress</Text><Text className="text-xs text-gray-400">3/10</Text></View>
+                            <View className="h-2.5 bg-slate-700 rounded-full w-full mt-1">
+                                <LinearGradient colors={['#a855f7', '#facc15']} className="h-full rounded-full w-[30%]" start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} />
+                            </View>
+                            <TouchableOpacity className="bg-slate-700 py-3 rounded-[12px] items-center mt-4" disabled><Text className="text-gray-400 font-bold text-base">Locked</Text></TouchableOpacity>
+                        </View>
 
-// --- Styles ---
-const styles = StyleSheet.create({
-    container: { flex: 1 },
-    scrollContainer: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 16, flexGrow: 1 }, // Adjusted padding
-    dashboard: { alignItems: 'center' },
-    welcomeTitle: { fontSize: 32, fontWeight: 'bold', color: '#fff', textAlign: 'center', marginBottom: 24, lineHeight: 40 },
-    banner: { width: '100%', height: 100, borderWidth: 2, borderColor: '#4b5563', borderStyle: 'dashed', borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginBottom: 24 },
-    bannerText: { color: '#9ca3af', fontSize: 16 },
-    bannerSubtext: { color: '#6b7280', fontSize: 14 },
-    card: { backgroundColor: '#2a2d3e', padding: 16, borderRadius: 16, marginBottom: 16, width: '100%' },
-    cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
-    cardTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff', flex: 1, marginRight: 8 },
-    cardSubtitle: { fontSize: 14, color: '#9ca3af', marginTop: 4 },
-    iconContainer: { width: 32, height: 32, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
-    icon: { width: 20, height: 20 },
-    headerIcon: { width: 28, height: 28, marginRight: 12 },
-    starContainer: { flexDirection: 'row', marginBottom: 16 },
-    starIcon: { width: 28, height: 28, marginRight: 4 },
-    gradientButton: { paddingVertical: 12, borderRadius: 8, alignItems: 'center' },
-    buttonText: { color: '#000', fontWeight: 'bold', fontSize: 16 },
-    coinDisplay: { flexDirection: 'row', alignItems: 'center', marginVertical: 12 },
-    largeCoinIcon: { width: 48, height: 48, marginRight: 12 },
-    coinAmount: { fontSize: 40, fontWeight: 'bold', color: '#fff' },
-    progressBarBackground: { height: 10, backgroundColor: '#4b5563', borderRadius: 5, width: '100%', marginTop: 4, marginBottom: 16 },
-    progressBarFill: { height: '100%', width: '30%', borderRadius: 5 },
-    progressText: { fontSize: 12, color: '#9ca3af' },
-    lockedButton: { backgroundColor: '#3f4359', paddingVertical: 12, borderRadius: 8, alignItems: 'center', marginTop: 16 },
-    lockedButtonText: { color: '#9ca3af', fontWeight: 'bold', fontSize: 16 },
-    statsGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-    statItem: { backgroundColor: '#1e2029', borderRadius: 8, padding: 12, width: '48%', marginBottom: 12, alignItems: 'center' },
-    activityItem: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#374151', paddingVertical: 12 },
-    activityIcon: { width: 20, height: 20, marginRight: 16 },
-    activityText: { color: '#d1d5db', flex: 1 },
-    activityTime: { color: '#6b7280', fontSize: 12 },
-    logoutButton: { backgroundColor: '#dc2626', paddingVertical: 12, borderRadius: 8, marginTop: 24, width: '100%', alignItems: 'center' },
-    statLabel: { fontSize: 14, color: '#9ca3af', marginTop: 4 },
-    statValue: { fontSize: 24, fontWeight: 'bold', color: '#facc15' },
-});
+                        {/* Events Card */}
+                        <View className="bg-slate-900 p-4 mb-4 rounded-[16px] w-full border border-slate-700">
+                            <View className="flex-row justify-between items-center mb-3">
+                                <Text className="text-xl font-bold text-white">Events</Text>
+                                <CalendarIcon />
+                            </View>
+                            <Text className="text-sm text-gray-400 mt-1 leading-5">"Weekend Champions" is now live!</Text>
+                            <Text className="text-sm text-gray-400 mt-3">Prize Pool: <Text className="text-yellow-300 font-bold">10,000 Coins</Text></Text>
+                            <TouchableOpacity className="bg-transparent py-3 rounded-[12px] items-center mt-4 border border-slate-600"><Text className="text-gray-200 font-bold text-base">View Events</Text></TouchableOpacity>
+                        </View>
+                        
+                        {/* Action Cards (reusable component) */}
+                        <ActionCard icon={PlusCircleIcon} title="Create a New Room" subtitle="Start a new game and invite your friends." buttonTitle="Create Room" buttonIcon={PlusCircleIcon} onButtonPress={() => navigation.navigate('CreateNewRoom')}  />
+                        <ActionCard icon={ArrowRightIcon} title="Join an Existing Room" subtitle="Have an invite code? Join a room now." buttonTitle="Join Room" buttonIcon={ArrowRightIcon} onButtonPress={() => navigation.navigate('JoinRoom')} />
+                        <ActionCard icon={TrophyIcon} title="View Leaderboards" subtitle="See how you rank against other players." buttonTitle="View Leaderboards" buttonIcon={TrophyIcon} onButtonPress={() => navigation.navigate('LeaderBoard')} />
+                        
+                        <AdBanner />
+
+                        {/* Stats Card */}
+                        <View className="bg-slate-900 p-4 mb-4 rounded-[16px] w-full border border-slate-700">
+                            <View className="flex-row items-center mb-2">
+                                <UsersIcon size={28} />
+                                <Text className="text-xl font-bold text-white ml-2">Your Stats</Text>
+                            </View>
+                            <View className="flex-row flex-wrap justify-between mt-2">
+                                <View className="bg-slate-950 rounded-[12px] p-3 w-[48%] mb-3 items-center justify-center min-h-[120px]"><ChartBarIcon /><Text className="text-2xl font-bold text-white mt-2">65%</Text><Text className="text-sm text-gray-400 mt-1">Win Ratio</Text></View>
+                                <View className="bg-slate-950 rounded-[12px] p-3 w-[48%] mb-3 items-center justify-center min-h-[120px]"><CoinIcon size={32} color="#fde047"/><Text className="text-2xl font-bold text-white mt-2">142</Text><Text className="text-sm text-gray-400 mt-1">Total Tosses</Text></View>
+                                <View className="bg-slate-950 rounded-[12px] p-3 w-[48%] mb-3 items-center justify-center min-h-[120px]"><UsersIcon size={32} color="#3b82f6"/><Text className="text-2xl font-bold text-white mt-2">35</Text><Text className="text-sm text-gray-400 mt-1">Rooms Joined</Text></View>
+                                <View className="bg-slate-950 rounded-[12px] p-3 w-[48%] mb-3 items-center justify-center min-h-[120px]"><StarIcon size={32} color="#f43f5e"/><Text className="text-2xl font-bold text-white mt-2">12</Text><Text className="text-sm text-gray-400 mt-1">Achievements</Text></View>
+                            </View>
+                        </View>
+                        
+                        {/* Invite Friends Card */}
+                        <View className="bg-slate-900 p-4 mb-4 rounded-[16px] w-full border border-slate-700">
+                            <View className="flex-row items-center mb-3">
+                                <GiftIcon />
+                                <Text className="text-xl font-bold text-white ml-2">Invite Friends</Text>
+                            </View>
+                            <Text className="text-sm text-gray-400 mt-1 leading-5">Get 100 bonus coins for every friend that signs up!</Text>
+                            <GradientButton title="Get Invite Link" onPress={() => {}} style={{marginTop: 16}}/>
+                        </View>
+                        
+                        <AdBanner />
+
+                        {/* Recent Activity Card */}
+                        <View className="bg-slate-900 p-4 mb-4 rounded-[16px] w-full border border-slate-700">
+                            <View className="flex-row items-center mb-3">
+                                <HistoryIcon />
+                                <Text className="text-xl font-bold text-white ml-2">Recent Activity</Text>
+                            </View>
+                            <View>
+                                {recentActivity.map((act, idx) => (
+                                    <View key={idx} className="flex-row items-center py-3">
+                                        <View className="w-9 h-9 rounded-full bg-slate-800 justify-center items-center mr-3 border border-slate-600"><CoinIcon size={20} color="#fde047" /></View>
+                                        <View className="flex-1"><Text className="text-sm font-medium text-gray-200">{act.t}</Text><Text className="text-xs text-gray-500 mt-0.5">{act.i}</Text></View>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+
+                        {/* Time In Game Card */}
+                        <View className="bg-slate-900 p-4 mb-4 rounded-[16px] w-full border border-slate-700">
+                            <View className="flex-row justify-between items-center mb-3">
+                                <Text className="text-xl font-bold text-white">Total Time in Game</Text>
+                                <ClockIcon />
+                            </View>
+                            <View className="flex-row items-center my-3">
+                                <ClockIcon size={40} color="#60a5fa" />
+                                <Text className="text-4xl font-bold text-white ml-3">3h 49m</Text>
+                            </View>
+                            <TouchableOpacity className="bg-transparent py-3 rounded-[12px] items-center mt-4 border border-slate-600"><Text className="text-gray-200 font-bold text-base">View Game History</Text></TouchableOpacity>
+                        </View>
+                        
+                    </ScrollView>
+                </SafeAreaView>
+            </LinearGradient>
+        </View>
+    );
+};
