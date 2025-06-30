@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
-import { AppLayout, Button, Card, AuthScreen, DashboardScreen } from './components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+
 import './global.css';
 import TheCoinTossRoom from 'components/screens/TheCoinTossRoom';
 
+// Import all screens
+import {
+  LoginScreen, SignupScreen, DashboardScreen, LoadingScreen, LeaderboardScreen,
+  TheCoinTossRoomScreen, ProfileScreen, CreateNewRoomScreen, JoinRoomScreen,
+} from './components';
+
+
+const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-function HomeScreen({ navigation }: any) {
+function AuthNavigator({ handleLogin }: { handleLogin: () => void }) {
   return (
+<<<<<<< HEAD
     <AppLayout
       headerTitle="TheCoinToss"
       mainScreenTitle="Welcome"
@@ -29,35 +41,46 @@ function HomeScreen({ navigation }: any) {
             title="Get Started" 
             onPress={() => navigation.navigate('Login/Signup')}
             className="mt-2"
-          />
-        </Card>
-
-        <Card title="Features" subtitle="What you can do with this app">
-          <View className="space-y-2">
-            <Text className="text-gray-700">• Clean component structure</Text>
-            <Text className="text-gray-700">• TypeScript support</Text>
-            <Text className="text-gray-700">• Tailwind CSS styling</Text>
-            <Text className="text-gray-700">• Reusable UI components</Text>
-            <Text className="text-gray-700">• Authentication flow</Text>
-            <Text className="text-gray-700">• Dashboard with statistics</Text>
-          </View>
-        </Card>
-
-        <Card title="How it Works" subtitle="Simple coin tossing made fun">
-          <View className="space-y-2">
-            <Text className="text-gray-700">1. Sign up or log in to your account</Text>
-            <Text className="text-gray-700">2. Toss coins and track your results</Text>
-            <Text className="text-gray-700">3. View your statistics and history</Text>
-            <Text className="text-gray-700">4. Challenge friends and compete</Text>
-          </View>
-        </Card>
-      </View>
-    </AppLayout>
+=======
+    <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login">{(props) => <LoginScreen {...props} onAuthSuccess={handleLogin} />}</Stack.Screen>
+      <Stack.Screen name="Signup">{(props) => <SignupScreen {...props} onAuthSuccess={handleLogin} />}</Stack.Screen>
+    </Stack.Navigator>
   );
 }
 
-function AuthScreenWrapper({ navigation }: any) {
+import type { DrawerContentComponentProps } from '@react-navigation/drawer';
+
+function CustomDrawerContent(props: DrawerContentComponentProps & { onLogout: () => void }) {
+  const { onLogout, ...restProps } = props;
   return (
+    <View className="flex-1 bg-slate-800">
+      <DrawerContentScrollView {...restProps}>
+        <DrawerItemList {...restProps} />
+      </DrawerContentScrollView>
+      <View className="p-4 border-t border-gray-600 flex-row items-center justify-between">
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('Profile')}
+          className="flex-row items-center flex-1 mr-2"
+        >
+          <Image
+            source={{ uri: 'https://i.pravatar.cc/150?u=a042581f4e29026709d' }}
+            className="w-10 h-10 rounded-full"
+>>>>>>> 8af547f432ce9ca96cc9a859890bd435902e5f09
+          />
+          <Text className="text-white font-semibold ml-3" numberOfLines={1}>Prem Yadav</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onLogout} className="p-2">
+          <FontAwesome name="sign-out" size={28} color="#ef4444" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+function AppDrawerNavigator({ handleLogout }: { handleLogout: () => void }) {
+  return (
+<<<<<<< HEAD
     <AuthScreen
       onAuthSuccess={() => navigation.navigate('Dashboard')}
       onBackToLanding={() => navigation.navigate('Home')}
@@ -69,18 +92,92 @@ function AuthScreenWrapper({ navigation }: any) {
 function DashboardScreenWrapper({ navigation }: any) {
   return (
     <DashboardScreen onLogout={() => navigation.navigate('Home')} />
+=======
+    <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} onLogout={handleLogout} />}
+      screenOptions={{
+        headerShown: false,
+        drawerStyle: { backgroundColor: '#1E293B' },
+        drawerInactiveTintColor: 'white',
+        drawerActiveTintColor: '#FBBF24',
+        drawerActiveBackgroundColor: '#334155',
+      }}
+      initialRouteName="Dashboard"
+    >
+      <Drawer.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+      />
+      <Drawer.Screen name="LeaderBoard" component={LeaderboardScreen} />
+      <Drawer.Screen name="TheCoinTossRoom" component={TheCoinTossRoomScreen} />
+      <Drawer.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ drawerItemStyle: { height: 0, margin: 0 } }}
+      />
+      <Drawer.Screen name="CreateNewRoom" component={CreateNewRoomScreen} options={{ drawerItemStyle: { height: 0, margin: 0 } }} />
+      <Drawer.Screen name="JoinRoom" component={JoinRoomScreen} options={{ drawerItemStyle: { height: 0, margin: 0 } }} />
+    
+    </Drawer.Navigator>
+>>>>>>> 8af547f432ce9ca96cc9a859890bd435902e5f09
   );
 }
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // --- THIS IS THE MODIFIED SECTION ---
+  useEffect(() => {
+    const checkUserSession = async () => {
+      console.log("DEBUG: 1. Starting session check...");
+      try {
+        const session = await AsyncStorage.getItem('user-session');
+        console.log("DEBUG: 2. Session check complete. Found session:", session);
+        if (session !== null) {
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error("DEBUG: 3. An error occurred during session check:", error);
+      } finally {
+        console.log("DEBUG: 4. Hiding loading screen.");
+        setIsLoading(false);
+      }
+    };
+
+    checkUserSession();
+  }, []);
+  // --- END OF MODIFIED SECTION ---
+
+  const handleLogin = async () => {
+    await AsyncStorage.setItem('user-session', 'true');
+    setIsAuthenticated(true);
+  };
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('user-session');
+    setIsAuthenticated(false);
+  };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <NavigationContainer>
+<<<<<<< HEAD
       <Drawer.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Login/Signup" component={AuthScreenWrapper} />
         <Drawer.Screen name="Dashboard" component={DashboardScreenWrapper} />
         <Drawer.Screen name="TheCoinTossRoom" component={TheCoinTossRoom} />
       </Drawer.Navigator>
+=======
+      {isAuthenticated ? (
+        <AppDrawerNavigator handleLogout={handleLogout} />
+      ) : (
+        <AuthNavigator handleLogin={handleLogin} />
+      )}
+>>>>>>> 8af547f432ce9ca96cc9a859890bd435902e5f09
       <StatusBar style="auto" />
     </NavigationContainer>
   );
