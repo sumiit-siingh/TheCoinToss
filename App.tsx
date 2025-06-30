@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Text, View } from 'react-native';
 import { AppLayout, Button, Card, AuthScreen, DashboardScreen } from './components';
 import './global.css';
+import TheCoinTossRoom from 'components/screens/TheCoinTossRoom';
 
 const Drawer = createDrawerNavigator();
 
@@ -16,6 +17,7 @@ function HomeScreen({ navigation }: any) {
       onHomePress={() => navigation.navigate('Home')}
       onSettingsPress={() => navigation.navigate('Dashboard')}
       onProfilePress={() => navigation.navigate('Dashboard')}
+      // onSettingsPress={() => navigation.navigate('TheCoinTossRoom')}
     >
       <View className="space-y-4">
         <Card title="Getting Started" subtitle="Welcome to TheCoinToss app!">
@@ -59,6 +61,7 @@ function AuthScreenWrapper({ navigation }: any) {
     <AuthScreen
       onAuthSuccess={() => navigation.navigate('Dashboard')}
       onBackToLanding={() => navigation.navigate('Home')}
+      // onAuthSuccess={() => navigation.navigate('TheCoinTossRoom')}
     />
   );
 }
@@ -76,6 +79,7 @@ export default function App() {
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Login/Signup" component={AuthScreenWrapper} />
         <Drawer.Screen name="Dashboard" component={DashboardScreenWrapper} />
+        <Drawer.Screen name="TheCoinTossRoom" component={TheCoinTossRoom} />
       </Drawer.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
